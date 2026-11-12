@@ -1,0 +1,61 @@
+import os
+
+files = os.listdir(r'D:\Rahul')
+
+for file in files:
+    print(file)
+
+import pandas as pd
+
+df = pd.read_csv('customer_shopping_behavior.csv.csv')
+
+df.head()
+
+df.info()
+
+df.describe(include = 'all')
+
+df.isnull().sum()
+
+df['Review Rating'] = df.groupby('Category')['Review Rating'].transform(lambda x: x.fillna(x.median()))
+
+df.isnull().sum()
+
+df.columns = df.columns.str.lower()
+df.columns = df.columns.str.replace(' ', '_')
+df = df.rename(columns={'purchase_amount_(usd)':'Purchased_amount'})
+df.columns
+
+# Create age groups
+labels = ['Youth Adult', 'Adult', 'Middle-Aged', 'Senior']
+
+df['age_group'] = pd.qcut(
+    df['age'],
+    q=4,
+    labels=labels
+)
+
+df[['age','age_group']].head(10)
+
+# create column purchase_frequency_days
+frequancy_mapping = {
+    'Fortnightly': 14,
+    'Weekly':7,
+    'Monthly':30,
+    'Quarterly':90,
+    'BI:Weekly':14,
+    'Annually':365,
+    'Every 3 months':90
+}
+df['Purchase_frequency_days'] = df['frequency_of_purchases'].map(frequancy_mapping)
+
+df[['frequency_of_purchases', 'Purchase_frequency_days']].head(10)
+
+print(df.columns.tolist())
+
+df = df.drop('promo_code_used', axis=1)
+
+pip install psycopg2-binary sqlalchemy
+
+%pip install pyodbc sqlalchemy pandas
+
